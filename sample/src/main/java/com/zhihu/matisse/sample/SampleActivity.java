@@ -92,10 +92,10 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                     break;
                                 case R.id.dracula:
                                     Matisse.from(SampleActivity.this)
-                                            .choose(MimeType.ofImage())
+                                            .choose(MimeType.ofVideo())
                                             .theme(R.style.Matisse_Dracula)
                                             .countable(false)
-                                            .maxSelectable(9)
+                                            .maxSelectable(1)
                                             .imageEngine(new PicassoEngine())
                                             .forResult(REQUEST_CODE_CHOOSE);
                                     break;

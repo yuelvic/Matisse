@@ -21,6 +21,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -75,10 +77,11 @@ public class MatisseActivity extends AppCompatActivity implements
 
     private AlbumsSpinner mAlbumsSpinner;
     private AlbumsAdapter mAlbumsAdapter;
-    private TextView mButtonPreview;
-    private TextView mButtonApply;
+//    private TextView mButtonPreview;
+//    private TextView mButtonApply;
     private View mContainer;
     private View mEmptyView;
+    private VideoView videoView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,12 +114,26 @@ public class MatisseActivity extends AppCompatActivity implements
         ta.recycle();
         navigationIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
-        mButtonPreview = (TextView) findViewById(R.id.button_preview);
-        mButtonApply = (TextView) findViewById(R.id.button_apply);
-        mButtonPreview.setOnClickListener(this);
-        mButtonApply.setOnClickListener(this);
+//        mButtonPreview = (TextView) findViewById(R.id.button_preview);
+//        mButtonApply = (TextView) findViewById(R.id.button_apply);
+//        mButtonPreview.setOnClickListener(this);
+//        mButtonApply.setOnClickListener(this);
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
+        videoView = (VideoView) findViewById(R.id.video_view);
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoView.start();
+            }
+        });
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoView.seekTo(0);
+                videoView.start();
+            }
+        });
 
         mSelectedCollection.onCreate(savedInstanceState);
         updateBottomToolbar();
@@ -137,6 +154,18 @@ public class MatisseActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         mSelectedCollection.onSaveInstanceState(outState);
         mAlbumCollection.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        videoView.pause();
+        super.onPause();
     }
 
     @Override
@@ -216,35 +245,35 @@ public class MatisseActivity extends AppCompatActivity implements
     private void updateBottomToolbar() {
         int selectedCount = mSelectedCollection.count();
         if (selectedCount == 0) {
-            mButtonPreview.setEnabled(false);
-            mButtonApply.setEnabled(false);
-            mButtonApply.setText(getString(R.string.button_apply_default));
+//            mButtonPreview.setEnabled(false);
+//            mButtonApply.setEnabled(false);
+//            mButtonApply.setText(getString(R.string.button_apply_default));
         } else if (selectedCount == 1 && mSpec.singleSelectionModeEnabled()) {
-            mButtonPreview.setEnabled(true);
-            mButtonApply.setText(R.string.button_apply_default);
-            mButtonApply.setEnabled(true);
+//            mButtonPreview.setEnabled(true);
+//            mButtonApply.setText(R.string.button_apply_default);
+//            mButtonApply.setEnabled(true);
         } else {
-            mButtonPreview.setEnabled(true);
-            mButtonApply.setEnabled(true);
-            mButtonApply.setText(getString(R.string.button_apply, selectedCount));
+//            mButtonPreview.setEnabled(true);
+//            mButtonApply.setEnabled(true);
+//            mButtonApply.setText(getString(R.string.button_apply, selectedCount));
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.button_preview) {
-            Intent intent = new Intent(this, SelectedPreviewActivity.class);
-            intent.putExtra(BasePreviewActivity.EXTRA_DEFAULT_BUNDLE, mSelectedCollection.getDataWithBundle());
-            startActivityForResult(intent, REQUEST_CODE_PREVIEW);
-        } else if (v.getId() == R.id.button_apply) {
-            Intent result = new Intent();
-            ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
-            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-            setResult(RESULT_OK, result);
-            finish();
-        }
+//        if (v.getId() == R.id.button_preview) {
+//            Intent intent = new Intent(this, SelectedPreviewActivity.class);
+//            intent.putExtra(BasePreviewActivity.EXTRA_DEFAULT_BUNDLE, mSelectedCollection.getDataWithBundle());
+//            startActivityForResult(intent, REQUEST_CODE_PREVIEW);
+//        } else if (v.getId() == R.id.button_apply) {
+//            Intent result = new Intent();
+//            ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
+//            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+//            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
+//            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+//            setResult(RESULT_OK, result);
+//            finish();
+//        }
     }
 
     @Override
@@ -312,11 +341,12 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
-        Intent intent = new Intent(this, AlbumPreviewActivity.class);
-        intent.putExtra(AlbumPreviewActivity.EXTRA_ALBUM, album);
-        intent.putExtra(AlbumPreviewActivity.EXTRA_ITEM, item);
-        intent.putExtra(BasePreviewActivity.EXTRA_DEFAULT_BUNDLE, mSelectedCollection.getDataWithBundle());
-        startActivityForResult(intent, REQUEST_CODE_PREVIEW);
+        videoView.setVideoURI(item.getContentUri());
+//        Intent intent = new Intent(this, AlbumPreviewActivity.class);
+//        intent.putExtra(AlbumPreviewActivity.EXTRA_ALBUM, album);
+//        intent.putExtra(AlbumPreviewActivity.EXTRA_ITEM, item);
+//        intent.putExtra(BasePreviewActivity.EXTRA_DEFAULT_BUNDLE, mSelectedCollection.getDataWithBundle());
+//        startActivityForResult(intent, REQUEST_CODE_PREVIEW);
     }
 
     @Override
