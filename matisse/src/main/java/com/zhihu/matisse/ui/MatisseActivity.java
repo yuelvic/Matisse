@@ -80,13 +80,13 @@ public class MatisseActivity extends AppCompatActivity implements
 
     private AlbumsSpinner mAlbumsSpinner;
     private AlbumsAdapter mAlbumsAdapter;
-//    private TextView mButtonPreview;
-//    private TextView mButtonApply;
     private View mContainer;
     private View mEmptyView;
     private VideoView videoView;
     private ImageView imageView;
     private View xelebBar;
+    private TextView tvCancel;
+    private TextView tvNext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,10 +124,10 @@ public class MatisseActivity extends AppCompatActivity implements
         xelebBar = findViewById(R.id.xeleb_bar);
         xelebBar.setVisibility(getIntent().getBooleanExtra("XelebMode", true) ? View.VISIBLE : View.GONE);
 
-//        mButtonPreview = (TextView) findViewById(R.id.button_preview);
-//        mButtonApply = (TextView) findViewById(R.id.button_apply);
-//        mButtonPreview.setOnClickListener(this);
-//        mButtonApply.setOnClickListener(this);
+        tvCancel = (TextView) findViewById(R.id.tv_cancel);
+        tvNext = (TextView) findViewById(R.id.tv_next);
+        tvCancel.setOnClickListener(this);
+        tvNext.setOnClickListener(this);
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
 
@@ -277,19 +277,17 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(View v) {
-//        if (v.getId() == R.id.button_preview) {
-//            Intent intent = new Intent(this, SelectedPreviewActivity.class);
-//            intent.putExtra(BasePreviewActivity.EXTRA_DEFAULT_BUNDLE, mSelectedCollection.getDataWithBundle());
-//            startActivityForResult(intent, REQUEST_CODE_PREVIEW);
-//        } else if (v.getId() == R.id.button_apply) {
-//            Intent result = new Intent();
-//            ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
-//            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-//            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
-//            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-//            setResult(RESULT_OK, result);
-//            finish();
-//        }
+        if (v.getId() == R.id.tv_cancel) {
+            finish();
+        } else if (v.getId() == R.id.tv_next) {
+            Intent result = new Intent();
+            ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
+            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
+            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            setResult(RESULT_OK, result);
+            finish();
+        }
     }
 
     @Override
