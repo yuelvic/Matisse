@@ -263,6 +263,14 @@ public final class SelectionCreator {
     }
 
     /**
+     * Set custom xeleb theme
+     */
+    public SelectionCreator xelebMode(boolean mode) {
+        mSelectionSpec.xelebMode = mode;
+        return this;
+    }
+
+    /**
      * Start to select media and wait for result.
      *
      * @param requestCode Identity of the request Activity or Fragment.
@@ -274,6 +282,8 @@ public final class SelectionCreator {
         }
 
         Intent intent = new Intent(activity, MatisseActivity.class);
+        intent.putExtra("MimeType", mSelectionSpec.onlyShowVideos());
+        intent.putExtra("XelebMode", mSelectionSpec.xelebMode());
 
         Fragment fragment = mMatisse.getFragment();
         if (fragment != null) {

@@ -44,6 +44,7 @@ public final class SelectionSpec {
     public int spanCount;
     public int gridExpectedSize;
     public float thumbnailScale;
+    public boolean xelebMode;
     public ImageEngine imageEngine;
 
     private SelectionSpec() {
@@ -90,6 +91,10 @@ public final class SelectionSpec {
 
     public boolean onlyShowVideos() {
         return showSingleMediaType && MimeType.ofVideo().containsAll(mimeTypeSet);
+    }
+
+    public boolean xelebMode() {
+        return xelebMode;
     }
 
     private static final class InstanceHolder {

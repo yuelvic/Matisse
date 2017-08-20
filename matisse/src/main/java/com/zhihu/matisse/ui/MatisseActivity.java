@@ -35,6 +35,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
@@ -84,6 +85,8 @@ public class MatisseActivity extends AppCompatActivity implements
     private View mContainer;
     private View mEmptyView;
     private VideoView videoView;
+    private ImageView imageView;
+    private View xelebBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,12 +119,20 @@ public class MatisseActivity extends AppCompatActivity implements
         ta.recycle();
         navigationIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
+        toolbar.setVisibility(getIntent().getBooleanExtra("XelebMode", false) ? View.GONE : View.VISIBLE);
+
+        xelebBar = findViewById(R.id.xeleb_bar);
+        xelebBar.setVisibility(getIntent().getBooleanExtra("XelebMode", true) ? View.VISIBLE : View.GONE);
+
 //        mButtonPreview = (TextView) findViewById(R.id.button_preview);
 //        mButtonApply = (TextView) findViewById(R.id.button_apply);
 //        mButtonPreview.setOnClickListener(this);
 //        mButtonApply.setOnClickListener(this);
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
+
+        imageView = (ImageView) findViewById(R.id.image_view);
+
         videoView = (VideoView) findViewById(R.id.video_view);
         videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
@@ -135,6 +146,9 @@ public class MatisseActivity extends AppCompatActivity implements
                 videoView.restart();
             }
         });
+
+        imageView.setVisibility(getIntent().getBooleanExtra("MimeType", false) ? View.GONE : View.VISIBLE);
+        videoView.setVisibility(getIntent().getBooleanExtra("MimeType", true) ? View.VISIBLE : View.GONE);
 
         mSelectedCollection.onCreate(savedInstanceState);
         updateBottomToolbar();
@@ -343,7 +357,9 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
-        videoView.setVideoURI(item.getContentUri());
+        if (getIntent().getBooleanExtra("MimeType", true))
+            videoView.setVideoURI(item.getContentUri());
+        else imageView.setImageURI(item.getContentUri());
 //        Intent intent = new Intent(this, AlbumPreviewActivity.class);
 //        intent.putExtra(AlbumPreviewActivity.EXTRA_ALBUM, album);
 //        intent.putExtra(AlbumPreviewActivity.EXTRA_ITEM, item);

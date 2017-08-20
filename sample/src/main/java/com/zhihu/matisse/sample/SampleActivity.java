@@ -76,23 +76,22 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                             switch (v.getId()) {
                                 case R.id.zhihu:
                                     Matisse.from(SampleActivity.this)
-                                            .choose(MimeType.ofAll(), false)
-                                            .countable(true)
-                                            .capture(true)
-                                            .captureStrategy(
-                                                    new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
-                                            .maxSelectable(9)
-                                            .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                                            .gridExpectedSize(
-                                                    getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                                            .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))
+                                            .xelebMode(false)
+                                            .showSingleMediaType(true)
+                                            .capture(false)
+                                            .theme(R.style.Matisse_Zhihu)
+                                            .countable(false)
+                                            .maxSelectable(1)
+                                            .spanCount(3)
                                             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                                            .thumbnailScale(0.85f)
                                             .imageEngine(new GlideEngine())
                                             .forResult(REQUEST_CODE_CHOOSE);
                                     break;
                                 case R.id.dracula:
                                     Matisse.from(SampleActivity.this)
                                             .choose(MimeType.ofVideo())
+                                            .xelebMode(true)
                                             .showSingleMediaType(true)
                                             .capture(false)
                                             .theme(R.style.Matisse_Dracula)
