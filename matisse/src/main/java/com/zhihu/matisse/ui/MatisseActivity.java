@@ -36,8 +36,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
+import com.devbrackets.android.exomedia.listener.OnCompletionListener;
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
 import com.zhihu.matisse.internal.entity.Item;
@@ -121,17 +123,16 @@ public class MatisseActivity extends AppCompatActivity implements
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
         videoView = (VideoView) findViewById(R.id.video_view);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
+            public void onPrepared() {
                 videoView.start();
             }
         });
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                videoView.seekTo(0);
-                videoView.start();
+            public void onCompletion() {
+                videoView.restart();
             }
         });
 
@@ -157,20 +158,21 @@ public class MatisseActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        videoView.resume();
-    }
-
-    @Override
     protected void onPause() {
         videoView.pause();
         super.onPause();
     }
 
     @Override
+    protected void onStop() {
+        videoView.stopPlayback();
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        videoView.release();
         mAlbumCollection.onDestroy();
     }
 

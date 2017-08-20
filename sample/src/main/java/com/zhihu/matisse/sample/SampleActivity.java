@@ -93,10 +93,14 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                 case R.id.dracula:
                                     Matisse.from(SampleActivity.this)
                                             .choose(MimeType.ofVideo())
+                                            .showSingleMediaType(true)
+                                            .capture(false)
                                             .theme(R.style.Matisse_Dracula)
                                             .countable(false)
                                             .maxSelectable(1)
-                                            .imageEngine(new PicassoEngine())
+                                            .spanCount(3)
+                                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                                            .imageEngine(new GlideEngine())
                                             .forResult(REQUEST_CODE_CHOOSE);
                                     break;
                             }
