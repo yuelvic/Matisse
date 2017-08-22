@@ -14,37 +14,52 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_color">
 
-    <ImageView
-        android:id="@+id/media_thumbnail"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-    <com.zhihu.matisse.internal.ui.widget.CheckView
-        android:id="@+id/check_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"/>
+        <ImageView
+            android:id="@+id/media_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <ImageView
-        android:id="@+id/gif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_gif"
-        android:visibility="gone"/>
+        <com.zhihu.matisse.internal.ui.widget.CheckView
+            android:id="@+id/check_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/video_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:textColor="@android:color/white"
-        android:textSize="12sp"
-        android:visibility="gone"/>
-</merge>
+        <ImageView
+            android:id="@+id/gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_gif"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

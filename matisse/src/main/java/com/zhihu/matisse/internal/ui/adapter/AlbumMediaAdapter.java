@@ -134,6 +134,7 @@ public class AlbumMediaAdapter extends
             if (selected) {
                 mediaGrid.setCheckEnabled(true);
                 mediaGrid.setChecked(true);
+                mediaGrid.setSelected(true);
             } else {
                 if (mSelectedCollection.maxSelectableReached()) {
                     mediaGrid.setCheckEnabled(false);
@@ -142,6 +143,7 @@ public class AlbumMediaAdapter extends
                     mediaGrid.setCheckEnabled(true);
                     mediaGrid.setChecked(false);
                 }
+                mediaGrid.setSelected(false);
             }
         }
     }
@@ -150,33 +152,37 @@ public class AlbumMediaAdapter extends
     public void onThumbnailClicked(ImageView thumbnail, Item item, RecyclerView.ViewHolder holder) {
         if (mOnMediaClickListener != null) {
             mOnMediaClickListener.onMediaClick(null, item, holder.getAdapterPosition());
+            onCheckViewClicked(null, item, holder);
         }
     }
 
     @Override
     public void onCheckViewClicked(CheckView checkView, Item item, RecyclerView.ViewHolder holder) {
-        if (mSelectionSpec.countable) {
-            int checkedNum = mSelectedCollection.checkedNumOf(item);
-            if (checkedNum == CheckView.UNCHECKED) {
-                if (assertAddSelection(holder.itemView.getContext(), item)) {
-                    mSelectedCollection.add(item);
-                    notifyCheckStateChanged();
-                }
-            } else {
-                mSelectedCollection.remove(item);
-                notifyCheckStateChanged();
-            }
-        } else {
-            if (mSelectedCollection.isSelected(item)) {
-                mSelectedCollection.remove(item);
-                notifyCheckStateChanged();
-            } else {
-                if (assertAddSelection(holder.itemView.getContext(), item)) {
-                    mSelectedCollection.add(item);
-                    notifyCheckStateChanged();
-                }
-            }
-        }
+//        if (mSelectionSpec.countable) {
+//            int checkedNum = mSelectedCollection.checkedNumOf(item);
+//            if (checkedNum == CheckView.UNCHECKED) {
+//                if (assertAddSelection(holder.itemView.getContext(), item)) {
+//                    mSelectedCollection.add(item);
+//                    notifyCheckStateChanged();
+//                }
+//            } else {
+//                mSelectedCollection.remove(item);
+//                notifyCheckStateChanged();
+//            }
+//        } else {
+//            if (mSelectedCollection.isSelected(item)) {
+//                mSelectedCollection.remove(item);
+//                notifyCheckStateChanged();
+//            } else {
+//                if (assertAddSelection(holder.itemView.getContext(), item)) {
+//                    mSelectedCollection.add(item);
+//                    notifyCheckStateChanged();
+//                }
+//            }
+//        }
+        mSelectedCollection.clear();
+        mSelectedCollection.add(item);
+        notifyDataSetChanged();
     }
 
     private void notifyCheckStateChanged() {

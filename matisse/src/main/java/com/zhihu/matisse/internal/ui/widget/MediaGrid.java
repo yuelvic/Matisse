@@ -17,6 +17,7 @@ package com.zhihu.matisse.internal.ui.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
@@ -31,6 +32,7 @@ import com.zhihu.matisse.internal.entity.SelectionSpec;
 
 public class MediaGrid extends SquareFrameLayout implements View.OnClickListener {
 
+    private View mView;
     private ImageView mThumbnail;
     private CheckView mCheckView;
     private ImageView mGifTag;
@@ -53,6 +55,7 @@ public class MediaGrid extends SquareFrameLayout implements View.OnClickListener
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.media_grid_content, this, true);
 
+        mView = findViewById(R.id.media_root);
         mThumbnail = (ImageView) findViewById(R.id.media_thumbnail);
         mCheckView = (CheckView) findViewById(R.id.check_view);
         mGifTag = (ImageView) findViewById(R.id.gif);
@@ -107,6 +110,17 @@ public class MediaGrid extends SquareFrameLayout implements View.OnClickListener
 
     public void setChecked(boolean checked) {
         mCheckView.setChecked(checked);
+    }
+
+    public void setSelected(boolean selected) {
+        float scale = mView.getResources().getDisplayMetrics().density;
+        int padding = (int) (2 * scale + 0.5f);
+        mView.setPadding(
+                selected ? padding : 0,
+                selected ? padding : 0,
+                selected ? padding : 0,
+                selected ? padding : 0
+        );
     }
 
     private void setImage() {

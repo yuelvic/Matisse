@@ -259,20 +259,20 @@ public class MatisseActivity extends AppCompatActivity implements
     }
 
     private void updateBottomToolbar() {
-        int selectedCount = mSelectedCollection.count();
-        if (selectedCount == 0) {
+//        int selectedCount = mSelectedCollection.count();
+//        if (selectedCount == 0) {
 //            mButtonPreview.setEnabled(false);
 //            mButtonApply.setEnabled(false);
 //            mButtonApply.setText(getString(R.string.button_apply_default));
-        } else if (selectedCount == 1 && mSpec.singleSelectionModeEnabled()) {
+//        } else if (selectedCount == 1 && mSpec.singleSelectionModeEnabled()) {
 //            mButtonPreview.setEnabled(true);
 //            mButtonApply.setText(R.string.button_apply_default);
 //            mButtonApply.setEnabled(true);
-        } else {
+//        } else {
 //            mButtonPreview.setEnabled(true);
 //            mButtonApply.setEnabled(true);
 //            mButtonApply.setText(getString(R.string.button_apply, selectedCount));
-        }
+//        }
     }
 
     @Override
@@ -280,6 +280,7 @@ public class MatisseActivity extends AppCompatActivity implements
         if (v.getId() == R.id.tv_cancel) {
             finish();
         } else if (v.getId() == R.id.tv_next) {
+            if (mSelectedCollection.asList().isEmpty()) return;
             Intent result = new Intent();
             ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
             result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
@@ -312,7 +313,6 @@ public class MatisseActivity extends AppCompatActivity implements
         // select default album.
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
-
             @Override
             public void run() {
                 cursor.moveToPosition(mAlbumCollection.getCurrentSelection());

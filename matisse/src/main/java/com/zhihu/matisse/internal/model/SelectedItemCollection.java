@@ -158,6 +158,10 @@ public class SelectedItemCollection {
         return paths;
     }
 
+    public void clear() {
+        mItems.clear();
+    }
+
     public boolean isEmpty() {
         return mItems == null || mItems.isEmpty();
     }
