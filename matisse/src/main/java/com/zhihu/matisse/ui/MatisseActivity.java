@@ -21,7 +21,6 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,9 +37,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.devbrackets.android.exomedia.listener.OnCompletionListener;
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
 import com.zhihu.matisse.internal.entity.Item;
@@ -56,6 +54,7 @@ import com.zhihu.matisse.internal.ui.adapter.AlbumsAdapter;
 import com.zhihu.matisse.internal.ui.widget.AlbumsSpinner;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 import com.zhihu.matisse.internal.utils.PathUtils;
+import com.zhihu.matisse.internal.utils.VideoPlayer;
 
 import java.util.ArrayList;
 
@@ -82,11 +81,13 @@ public class MatisseActivity extends AppCompatActivity implements
     private AlbumsAdapter mAlbumsAdapter;
     private View mContainer;
     private View mEmptyView;
-    private VideoView videoView;
+    private SimpleExoPlayerView videoView;
     private ImageView imageView;
     private View xelebBar;
     private TextView tvCancel;
     private TextView tvNext;
+
+    private VideoPlayer videoPlayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,17 +134,12 @@ public class MatisseActivity extends AppCompatActivity implements
 
         imageView = (ImageView) findViewById(R.id.image_view);
 
-        videoView = (VideoView) findViewById(R.id.video_view);
-        videoView.setOnPreparedListener(new OnPreparedListener() {
+        videoView = (SimpleExoPlayerView) findViewById(R.id.video_view);
+        videoPlayer = new VideoPlayer(this);
+        videoPlayer.setListener(new VideoPlayer.Listener() {
             @Override
-            public void onPrepared() {
-                videoView.start();
-            }
-        });
-        videoView.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion() {
-                videoView.restart();
+            public void onPlayerReady(SimpleExoPlayer simpleExoPlayer) {
+                videoView.setPlayer(simpleExoPlayer);
             }
         });
 
@@ -173,20 +169,20 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        videoView.pause();
+        videoPlayer.stop();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        videoView.stopPlayback();
+        videoPlayer.stop();
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        videoView.release();
+        videoPlayer.release();
         mAlbumCollection.onDestroy();
     }
 
@@ -355,8 +351,10 @@ public class MatisseActivity extends AppCompatActivity implements
 
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
-        if (getIntent().getBooleanExtra("MimeType", true))
-            videoView.setVideoURI(item.getContentUri());
+        if (getIntent().getBooleanExtra("MimeType", true)) {
+            videoPlayer.prepare(item.getContentUri());
+            videoPlayer.play();
+        }
         else imageView.setImageURI(item.getContentUri());
 //        Intent intent = new Intent(this, AlbumPreviewActivity.class);
 //        intent.putExtra(AlbumPreviewActivity.EXTRA_ALBUM, album);
