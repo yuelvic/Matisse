@@ -84,6 +84,7 @@ public class MatisseActivity extends AppCompatActivity implements
     private SimpleExoPlayerView videoView;
     private ImageView imageView;
     private View xelebBar;
+    private TextView tvTitle;
     private TextView tvCancel;
     private TextView tvNext;
 
@@ -124,6 +125,8 @@ public class MatisseActivity extends AppCompatActivity implements
 
         xelebBar = findViewById(R.id.xeleb_bar);
         xelebBar.setVisibility(getIntent().getBooleanExtra("XelebMode", true) ? View.VISIBLE : View.GONE);
+
+        tvTitle = (TextView) findViewById(R.id.tv_title);
 
         tvCancel = (TextView) findViewById(R.id.tv_cancel);
         tvNext = (TextView) findViewById(R.id.tv_next);

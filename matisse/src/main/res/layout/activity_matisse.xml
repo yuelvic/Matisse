@@ -62,7 +62,7 @@
             android:text="Cancel"/>
 
         <TextView
-            android:id="@+id/tv_upload_title"
+            android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
