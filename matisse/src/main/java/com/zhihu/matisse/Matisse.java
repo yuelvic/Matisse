@@ -86,6 +86,17 @@ public final class Matisse {
     }
 
     /**
+     * Obtain user selected media' {@link String} list in the starting Activity or Fragment.
+     *
+     * @param data Intent passed by {@link Activity#onActivityResult(int, int, Intent)} or
+     *             {@link Fragment#onActivityResult(int, int, Intent)}.
+     * @return User selected media' {@link String} cover path.
+     */
+    public static String obtainCoverPath(Intent data) {
+        return data.getStringExtra(MatisseActivity.EXTRA_RESULT_COVER_PATH);
+    }
+
+    /**
      * Obtain user selected media path list in the starting Activity or Fragment.
      *
      * @param data Intent passed by {@link Activity#onActivityResult(int, int, Intent)} or

@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -70,6 +72,7 @@ public class MatisseActivity extends AppCompatActivity implements
 
     public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
     public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
+    public static final String EXTRA_RESULT_COVER_PATH = "extra_result_cover_path";
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
     private final AlbumCollection mAlbumCollection = new AlbumCollection();
@@ -89,6 +92,7 @@ public class MatisseActivity extends AppCompatActivity implements
     private TextView tvNext;
 
     private VideoPlayer videoPlayer;
+    private String coverPath = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -277,7 +281,7 @@ public class MatisseActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_cancel) {
-            finish();
+            onBackPressed();
         } else if (v.getId() == R.id.tv_next) {
             if (mSelectedCollection.asList().isEmpty()) return;
             Intent result = new Intent();
@@ -285,6 +289,7 @@ public class MatisseActivity extends AppCompatActivity implements
             result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
             ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
             result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            result.putExtra(EXTRA_RESULT_COVER_PATH, coverPath);
             setResult(RESULT_OK, result);
             finish();
         }
@@ -355,6 +360,8 @@ public class MatisseActivity extends AppCompatActivity implements
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
         if (getIntent().getBooleanExtra("MimeType", true)) {
+            coverPath = album.getCoverPath();
+            Log.d("Cover", coverPath);
             videoPlayer.prepare(item.getContentUri());
             videoPlayer.play();
         }
