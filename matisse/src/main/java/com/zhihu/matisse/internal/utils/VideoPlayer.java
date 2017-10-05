@@ -2,11 +2,10 @@ package com.zhihu.matisse.internal.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -37,7 +36,6 @@ public class VideoPlayer {
 
     private Context context;
 
-    private Handler handler = new Handler();
     private BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
     private TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
     private TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
@@ -88,6 +86,12 @@ public class VideoPlayer {
                 switch (playbackState) {
                     case Player.STATE_READY:
                         listener.onPlayerReady(simpleExoPlayer);
+                        int width = simpleExoPlayer.getVideoFormat().width;
+                        int height = simpleExoPlayer.getVideoFormat().height;
+
+                        Log.d("Dimension", width + ", " + height);
+                        if (width >= height) listener.onPlayerLandscape();
+                        else if (width < height) listener.onPlayerPortrait();
                         break;
                     case Player.STATE_ENDED:
                         restart();
@@ -135,6 +139,8 @@ public class VideoPlayer {
 
     public interface Listener {
         void onPlayerReady(SimpleExoPlayer simpleExoPlayer);
+        void onPlayerPortrait();
+        void onPlayerLandscape();
     }
 
 }

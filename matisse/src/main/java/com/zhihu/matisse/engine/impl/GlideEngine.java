@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.zhihu.matisse.engine.ImageEngine;
+import com.zhihu.matisse.internal.loader.GlideApp;
 
 /**
  * {@link ImageEngine} implementation using Glide.
@@ -32,9 +33,9 @@ public class GlideEngine implements ImageEngine {
 
     @Override
     public void loadThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView, Uri uri) {
-        Glide.with(context)
-                .load(uri)
+        GlideApp.with(context)
                 .asBitmap()  // some .jpeg files are actually gif
+                .load(uri)
                 .placeholder(placeholder)
                 .override(resize, resize)
                 .centerCrop()
@@ -44,9 +45,9 @@ public class GlideEngine implements ImageEngine {
     @Override
     public void loadGifThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView,
                                  Uri uri) {
-        Glide.with(context)
-                .load(uri)
+        GlideApp.with(context)
                 .asBitmap()
+                .load(uri)
                 .placeholder(placeholder)
                 .override(resize, resize)
                 .centerCrop()
@@ -55,7 +56,7 @@ public class GlideEngine implements ImageEngine {
 
     @Override
     public void loadImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(uri)
                 .override(resizeX, resizeY)
                 .priority(Priority.HIGH)
@@ -64,9 +65,9 @@ public class GlideEngine implements ImageEngine {
 
     @Override
     public void loadGifImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
-        Glide.with(context)
-                .load(uri)
+        GlideApp.with(context)
                 .asGif()
+                .load(uri)
                 .override(resizeX, resizeY)
                 .priority(Priority.HIGH)
                 .into(imageView);

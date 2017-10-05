@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.nfc.Tag;
@@ -40,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -87,7 +89,6 @@ public class MatisseActivity extends AppCompatActivity implements
     private SimpleExoPlayerView videoView;
     private ImageView imageView;
     private View xelebBar;
-    private TextView tvTitle;
     private TextView tvCancel;
     private TextView tvNext;
 
@@ -130,14 +131,18 @@ public class MatisseActivity extends AppCompatActivity implements
         xelebBar = findViewById(R.id.xeleb_bar);
         xelebBar.setVisibility(getIntent().getBooleanExtra("XelebMode", true) ? View.VISIBLE : View.GONE);
 
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-
         tvCancel = (TextView) findViewById(R.id.tv_cancel);
         tvNext = (TextView) findViewById(R.id.tv_next);
         tvCancel.setOnClickListener(this);
         tvNext.setOnClickListener(this);
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
+
+        if (getIntent().getBooleanExtra("XelebMode", true)) {
+            Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Gilroy-Bold.otf");
+            tvCancel.setTypeface(typeface);
+            tvNext.setTypeface(typeface);
+        }
 
         imageView = (ImageView) findViewById(R.id.image_view);
 
@@ -147,6 +152,18 @@ public class MatisseActivity extends AppCompatActivity implements
             @Override
             public void onPlayerReady(SimpleExoPlayer simpleExoPlayer) {
                 videoView.setPlayer(simpleExoPlayer);
+            }
+
+            @Override
+            public void onPlayerPortrait() {
+                Log.d("Orientation", "Portrait");
+                videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
+            }
+
+            @Override
+            public void onPlayerLandscape() {
+                Log.d("Orientation", "Landscape");
+                videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
             }
         });
 
@@ -343,6 +360,8 @@ public class MatisseActivity extends AppCompatActivity implements
         } else {
             mContainer.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
+            videoPlayer.prepare(Uri.parse(album.getCoverPath()));
+            videoPlayer.play();
             Fragment fragment = MediaSelectionFragment.newInstance(album);
             getSupportFragmentManager()
                     .beginTransaction()
